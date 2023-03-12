@@ -617,12 +617,12 @@ sed "s/$/\t$i/"
 # $i is the valuable you want to add
 
 # To add the filename to every last column of the file
-for i in $(ls);do sed -i "s/$/\t$i/" $i;done
+for i in $(ls); do sed -i "s/$/\t$i/" $i; done
 ```
 
 ##### Add extension of filename to last column
 ```bash
-for i in T000086_1.02.n T000086_1.02.p;do sed "s/$/\t${i/*./}/" $i;done >T000086_1.02.np
+for i in T000086_1.02.n T000086_1.02.p; do sed "s/$/\t${i/*./}/" $i; done >T000086_1.02.np
 ```
 
 ##### Remove newline\ nextline
@@ -1055,7 +1055,7 @@ if [[ $age -gt 21 ]]; then echo -e "forever 21!!" ; fi
 ##### For loop
 ```bash
 # Echo the file name under the current directory
-for i in $(ls); do echo file $i;done
+for i in $(ls); do echo file $i; done
 #or
 for i in *; do echo file $i; done
 
@@ -1063,7 +1063,7 @@ for i in *; do echo file $i; done
 for dir in $(<myfile); do mkdir $dir; done
 
 # Press any key to continue each loop
-for i in $(cat tpc_stats_0925.log |grep failed|grep -o '\query\w\{1,2\}');do cat ${i}.log; read -rsp $'Press any key to continue...\n' -n1 key;done
+for i in $(cat tpc_stats_0925.log |grep failed|grep -o '\query\w\{1,2\}'); do cat ${i}.log; read -rsp $'Press any key to continue...\n' -n1 key; done
 
 # Print a file line by line when a key is pressed,
 oifs="$IFS"; IFS=$'\n'; for line in $(cat myfile); do ...; done
@@ -1073,21 +1073,21 @@ while read -r line; do ...; done <myfile
 for line in $(cat myfile); do echo $line; read -n1; done
 
 #Loop through an array
-for i in "${arrayName[@]}"; do echo $i;done
+for i in "${arrayName[@]}"; do echo $i; done
 
 ```
 
 ##### While loop,
 ```bash
 # Column subtraction of a file (e.g. a 3 columns file)
-while read a b c; do echo $(($c-$b));done < <(head filename)
+while read a b c; do echo $(($c-$b)); done < <(head filename)
 #there is a space between the two '<'s
 
 # Sum up column subtraction
 i=0; while read a b c; do ((i+=$c-$b)); echo $i; done < <(head filename)
 
 # Keep checking a running process (e.g. perl) and start another new process (e.g. python) immediately after it. (BETTER use the wait command! Ctrl+F 'wait')
-while [[ $(pidof perl) ]];do echo f;sleep 10;done && python timetorunpython.py
+while [[ $(pidof perl) ]]; do echo f; sleep 10; done && python timetorunpython.py
 ```
 
 ##### switch (case in bash)
@@ -1143,6 +1143,29 @@ date -d "Tue Mar 16 00:00:00 UTC 2021"  +%s
 date --date @1615852800
 # Tue Mar 16 00:00:00 UTC 2021
 
+```
+
+##### Print current time point for N days ago or N days after
+```bash
+# print current date first (for the following example)
+date +"%F %H:%M:%S"
+# 2023-03-11 16:17:09
+
+# print the time that is 1 day ago
+date -d"1 day ago" +"%F %H:%M:%S"
+# 2023-03-10 16:17:09
+
+# print the time that is 7 days ago
+date -d"7 days ago" +"%F %H:%M:%S"
+# 2023-03-04 16:17:09
+
+# print the time that is a week ago
+date -d"1 week ago" +"%F %H:%M:%S"
+# 2023-03-04 16:17:09
+
+# add 1 day to date
+date -d"-1 day ago" +"%F %H:%M:%S"
+# 2023-03-12 16:17:09
 ```
 
 ##### wait for random duration (e.g. sleep 1-5 second, like adding a jitter)
@@ -2746,8 +2769,8 @@ echo {1,2}{1,2}
 ```bash
 set = {A,T,C,G}
 group= 5
-for ((i=0; i<$group; i++));do
-    repetition=$set$repetition;done
+for ((i=0; i<$group; i++)); do
+    repetition=$set$repetition; done
     bash -c "echo "$repetition""
 ```
 
@@ -2837,12 +2860,28 @@ var=$((var+1))
 cat filename|rev|cut -f1|rev
 ```
 
-##### Cat to a file
+##### Create or replace a file with contents
 ```bash
 cat >myfile
 let me add sth here
-exit by control + c
-^C
+# exit with ctrl+d
+
+# or using tee
+tee myfile
+let me add sth else here
+# exit with ctrl+d
+```
+
+##### Append to a file with contents
+```bash
+cat >>myfile
+let me add sth here
+# exit with ctrl+d
+
+# or using tee
+tee -a myfile
+let me add sth else here
+# exit with ctrl+d
 ```
 
 ##### Clear the contents of a file (e.g. filename)
@@ -2925,7 +2964,7 @@ tac filename
 
 ##### Reverse the result from `uniq -c`
 ```bash
-while read a b; do yes $b |head -n $a ;done <test.txt
+while read a b; do yes $b |head -n $a ; done <test.txt
 ```
 
 
@@ -3240,9 +3279,9 @@ fallocate -l 10G 10Gigfile
 
 ##### Create dummy file of certain size (e.g. 200mb)
 ```bash
-dd if=/dev/zero of=//dev/shm/200m bs=1024k count=200
+dd if=/dev/zero of=/dev/shm/200m bs=1024k count=200
 # or
-dd if=/dev/zero of=//dev/shm/200m bs=1M count=200
+dd if=/dev/zero of=/dev/shm/200m bs=1M count=200
 
 # Standard output:
 # 200+0 records in
@@ -3255,9 +3294,29 @@ dd if=/dev/zero of=//dev/shm/200m bs=1M count=200
 watch -n 1 wc -l filename
 ```
 
+##### Use Bash Strict Mode
+```bash
+# These options can make your code safer but, depending on how your pipeline is written, it might be too aggressive 
+# or it might not catch the errors that you are interested in
+
+# for reference see https://gist.github.com/mohanpedala/1e2ff5661761d3abd0385e8223e16425
+#               and https://mywiki.wooledge.org/BashPitfalls#set_-euo_pipefail
+
+set -o errexit      # exit immediately if a pipeline returns a non-zero status
+set -o errtrace     # trap ERR from shell functions, command substitutions, and commands from subshell
+set -o nounset      # treat unset variables as an error
+set -o pipefail     # pipe will exit with last non-zero status, if applicable
+set -Eue -o pipefail  # shorthand for above (pipefail has no short option)
+```
+
 ##### Print commands and their arguments when execute (e.g. echo `expr 10 + 20 `)
 ```bash
 set -x; echo `expr 10 + 20 `
+# or
+set -o xtrace; echo `expr 10 + 20 `
+
+# to turn it off..
+set +x
 ```
 
 ##### Print some meaningful sentences to you (install fortune first)
