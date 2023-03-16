@@ -33,22 +33,23 @@ Here's a more stylish version of [Bash-Oneliner](https://onceupon.github.io/Bash
 
 #####  Using Ctrl keys
 ```
+Ctrl + a : move to the beginning of line.
+Ctrl + d : if you've type something, Ctrl + d deletes the character under the cursor, else, it escapes the current shell.
+Ctrl + e : move to the end of line.
+Ctrl + k : delete all text from the cursor to the end of line.
+Ctrl + l : equivalent to clear.
 Ctrl + n : same as Down arrow.
 Ctrl + p : same as Up arrow.
+Ctrl + q : to resume output to terminal after Ctrl + s.
 Ctrl + r : begins a backward search through command history.(keep pressing Ctrl + r to move backward)
 Ctrl + s : to stop output to terminal.
-Ctrl + q : to resume output to terminal after Ctrl + s.
-Ctrl + a : move to the beginning of line.
-Ctrl + e : move to the end of line.
-Ctrl + d : if you've type something, Ctrl + d deletes the character under the cursor, else, it escapes the current shell.
-Ctrl + k : delete all text from the cursor to the end of line.
-Ctrl + x + backspace : delete all text from the beginning of line to the cursor.
 Ctrl + t : transpose the character before the cursor with the one under the cursor, press Esc + t to transposes the two words before the cursor.
-Ctrl + w : cut the word before the cursor; then Ctrl + y paste it
 Ctrl + u : cut the line before the cursor; then Ctrl + y paste it
-Ctrl + _ : undo typing.
-Ctrl + l : equivalent to clear.
+Ctrl + w : cut the word before the cursor; then Ctrl + y paste it
+Ctrl + x + backspace : delete all text from the beginning of line to the cursor.
 Ctrl + x + Ctrl + e : launch editor defined by $EDITOR to input your command. Useful for multi-line commands.
+Ctrl + z : stop current running process and keep it in background. You can use `fg` to continue the process in the foreground, or `bg` to continue the process in the background.
+Ctrl + _ : undo typing.
 ```
 ##### Change case
 ```bash
@@ -59,6 +60,7 @@ Esc + l
 Esc + c
 # converts letter under the cursor to uppercase, rest of the word to lowercase.
 ```
+
 ##### Run history number (e.g. 53)
 ```bash
 !53
@@ -129,6 +131,31 @@ $USER   current username
 $HOSTNAME   current hostname
 ```
 
+##### Using vi-mode in your shell
+```bash
+set -o vi
+# change bash shell to vi mode
+# then hit the Esc key to change to vi edit mode (when `set -o vi` is set)
+k
+# in vi edit mode - previous command
+j
+# in vi edit mode - next command
+0
+# in vi edit mode - beginning of the command
+R
+# in vi edit mode - replace current characters of command
+2w
+# in vi edit mode - next to 2nd word
+b
+# in vi edit mode - previous word
+i
+# in vi edit mode - go to insert mode
+v
+# in vi edit mode - edit current command in vi
+man 3 readline
+# man page for complete readline mapping
+```
+
 ## Variable
 [[back to top](#handy-bash-one-liners)]
 ##### Variable substitution within quotes
@@ -144,7 +171,7 @@ echo '$foo'
 # single quotes within double quotes will not cancel expansion and will be part of the output
 echo "'$foo'"
 # 'bar'
-# doubled single quotes act as double quotes making variables expand
+# doubled single quotes act as if there are no quotes at all
 echo ''$foo''
 # bar
 ```
@@ -2074,11 +2101,6 @@ killall pulseaudio
 # then press Alt-F2 and type in pulseaudio
 ```
 
-##### When sound not working
-```bash
-killall pulseaudio
-```
-
 ##### List information about SCSI devices
 ```bash
 lsscsi
@@ -3144,11 +3166,40 @@ rsync -av directory user@ip_address:/path/to/directory.bak
 # skip files that are newer on receiver (i prefer this one!)
 ```
 
+##### Create a temporary directory and `cd` into it
+```bash
+cd $(mktemp -d)
+# for example, this will create a temporary directory "/tmp/tmp.TivmPLUXFT"
+```
+
 ##### Make all directories at one time!
 ```bash
 mkdir -p project/{lib/ext,bin,src,doc/{html,info,pdf},demo/stat}
 # -p: make parent directory
-# this will create project/doc/html/; project/doc/info; project/lib/ext ,etc
+# this will create:
+# project/
+# project/bin/
+# project/demo/
+# project/demo/stat/
+# project/doc/
+# project/doc/html/
+# project/doc/info/
+# project/doc/pdf/
+# project/lib/
+# project/lib/ext/
+# project/src/
+#
+# project/
+# ├── bin
+# ├── demo
+# │   └── stat
+# ├── doc
+# │   ├── html
+# │   ├── info
+# │   └── pdf
+# ├── lib
+# │   └── ext
+# └── src
 ```
 
 ##### Run command only if another command returns zero exit status (well done)
