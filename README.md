@@ -120,6 +120,7 @@ $?   :most recent foreground pipeline exit status.
 $-   :current options set for the shell.
 $$   :pid of the current shell (not subshell).
 $!   :is the PID of the most recent background command.
+$_   :last argument of the previously executed command, or the path of the bash script.
 
 $DESKTOP_SESSION     current display manager
 $EDITOR   preferred text editor.
@@ -305,8 +306,8 @@ echo "var=5;--var"| bc
 grep = grep -G # Basic Regular Expression (BRE)
 fgrep = grep -F # fixed text, ignoring meta-characters
 egrep = grep -E # Extended Regular Expression (ERE)
-pgrep = grep -P # Perl Compatible Regular Expressions (PCRE)
 rgrep = grep -r # recursive
+grep -P # Perl Compatible Regular Expressions (PCRE)
 ```
 
 #####  Grep and count number of empty lines
